@@ -1,0 +1,27 @@
+body {
+    font-family: 'Segoe UI';        }
+table {
+    border-collapse: collapse;
+}
+td {
+    padding: 5px;
+}
+.uncommon {
+    background: green;
+}
+.rare {
+    background: blue;
+}
+.epic {
+    background: purple;
+}
+.legendary {
+    background: orange;
+}
+text-right {
+    text-align: right;
+}
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
