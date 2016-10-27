@@ -69,181 +69,19 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             $scope.items.avgItemLvl = data.items.averageItemLevel;
             $scope.items.avgItemLvlEquipped = data.items.averageItemLevelEquipped;
 
-            if (data.items.back !== undefined) {
-                $scope.items.back = {
-                    id: data.items.back.id,
-                    name: data.items.back.name,
-                    quality: data.items.back.quality,
-                    itemLevel: data.items.back.itemLevel,
-                    stats: GetStats(data.items.back.stats),
-                    armor: data.items.back.armor
-                };
-            }
-
-            if (data.items.chest !== undefined) {
-                $scope.items.chest = {
-                    id: data.items.chest.id,
-                    name: data.items.chest.name,
-                    quality: data.items.chest.quality,
-                    itemLevel: data.items.chest.itemLevel,
-                    stats: GetStats(data.items.chest.stats),
-                    armor: data.items.chest.armor
-                };
-            }
-
-            if (data.items.feet !== undefined) {
-                $scope.items.feet = {
-                    id: data.items.feet.id,
-                    name: data.items.feet.name,
-                    quality: data.items.feet.quality,
-                    itemLevel: data.items.feet.itemLevel,
-                    stats: GetStats(data.items.feet.stats),
-                    armor: data.items.feet.armor
-                };
-            }
-
-            if (data.items.finger1 !== undefined) {
-                $scope.items.finger1 = {
-                    id: data.items.finger1.id,
-                    name: data.items.finger1.name,
-                    quality: data.items.finger1.quality,
-                    itemLevel: data.items.finger1.itemLevel,
-                    stats: GetStats(data.items.finger1.stats),
-                    armor: data.items.finger1.armor
-                };
-            }
-
-            if (data.items.finger2 !== undefined) {
-                $scope.items.finger2 = {
-                    id: data.items.finger2.id,
-                    name: data.items.finger2.name,
-                    quality: data.items.finger2.quality,
-                    itemLevel: data.items.finger2.itemLevel,
-                    stats: GetStats(data.items.finger2.stats),
-                    armor: data.items.finger2.armor
-                };
-            }
-
-            if (data.items.hands !== undefined) {
-                $scope.items.hands = {
-                    id: data.items.hands.id,
-                    name: data.items.hands.name,
-                    quality: data.items.hands.quality,
-                    itemLevel: data.items.hands.itemLevel,
-                    stats: GetStats(data.items.hands.stats),
-                    armor: data.items.hands.armor
-                };
-            }
-
-            if (data.items.head !== undefined) {
-                $scope.items.head = {
-                    id: data.items.head.id,
-                    name: data.items.head.name,
-                    quality: data.items.head.quality,
-                    itemLevel: data.items.head.itemLevel,
-                    stats: GetStats(data.items.head.stats),
-                    armor: data.items.head.armor
-                };
-            }
-
-            if (data.items.legs !== undefined) {
-                $scope.items.legs = {
-                    id: data.items.legs.id,
-                    name: data.items.legs.name,
-                    quality: data.items.legs.quality,
-                    itemLevel: data.items.legs.itemLevel,
-                    stats: GetStats(data.items.legs.stats),
-                    armor: data.items.legs.armor
-                };
-            }
-
-            if (data.items.mainHand !== undefined) {
-                $scope.items.mainHand = {
-                    id: data.items.mainHand.id,
-                    name: data.items.mainHand.name,
-                    quality: data.items.mainHand.quality,
-                    itemLevel: data.items.mainHand.itemLevel,
-                    stats: GetStats(data.items.mainHand.stats),
-                    armor: data.items.mainHand.armor
-                };
-            }
-
-            if (data.items.neck !== undefined) {
-                $scope.items.neck = {
-                    id: data.items.neck.id,
-                    name: data.items.neck.name,
-                    quality: data.items.neck.quality,
-                    itemLevel: data.items.neck.itemLevel,
-                    stats: GetStats(data.items.neck.stats),
-                    armor: data.items.neck.armor
-                };
-            }
-
-            if (data.items.offHand !== undefined) {
-                $scope.items.offHand = {
-                    id: data.items.offHand.id,
-                    name: data.items.offHand.name,
-                    quality: data.items.offHand.quality,
-                    itemLevel: data.items.offHand.itemLevel,
-                    stats: GetStats(data.items.offHand.stats),
-                    armor: data.items.offHandback.armor
-                };
-            }
-
-            if (data.items.shoulder !== undefined) {
-                $scope.items.shoulder = {
-                    id: data.items.shoulder.id,
-                    name: data.items.shoulder.name,
-                    quality: data.items.shoulder.quality,
-                    itemLevel: data.items.shoulder.itemLevel,
-                    stats: GetStats(data.items.shoulder.stats),
-                    armor: data.items.shoulder.armor
-                };
-            }
-
-            if (data.items.trinket1 !== undefined) {
-                $scope.items.trinket1 = {
-                    id: data.items.trinket1.id,
-                    name: data.items.trinket1.name,
-                    quality: data.items.trinket1.quality,
-                    itemLevel: data.items.trinket1.itemLevel,
-                    stats: GetStats(data.items.trinket1.stats),
-                    armor: data.items.trinket1.armor
-                };
-            }
-
-            if (data.items.trinket2 !== undefined) {
-                $scope.items.trinket2 = {
-                    id: data.items.trinket2.id,
-                    name: data.items.trinket2.name,
-                    quality: data.items.trinket2.quality,
-                    itemLevel: data.items.trinket2.itemLevel,
-                    stats: GetStats(data.items.trinket2.stats),
-                    armor: data.items.trinket2.armor
-                };
-            }
-
-            if (data.items.waist !== undefined) {
-                $scope.items.waist = {
-                    id: data.items.waist.id,
-                    name: data.items.waist.name,
-                    quality: data.items.waist.quality,
-                    itemLevel: data.items.waist.itemLevel,
-                    stats: GetStats(data.items.waist.stats),
-                    armor: data.items.waist.armor
-                };
-            }
-
-            if (data.items.wrist !== undefined) {
-                $scope.items.wrist = {
-                    id: data.items.wrist.id,
-                    name: data.items.wrist.name,
-                    quality: data.items.wrist.quality,
-                    itemLevel: data.items.wrist.itemLevel,
-                    stats: GetStats(data.items.wrist.stats),
-                    armor: data.items.wrist.armor
-                };
-            }
+            var slots = ["back","chest","feet","finger1","finger2","hands","head","legs","mainHand","neck","offHand","shoulder","trinket1","trinket2","waist","wrist"];
+            angular.forEach(slots, function(value, key) {
+                if (data.items[value] !== undefined) {
+                    $scope.items[value] = {
+                        id: data.items[value].id,
+                        name: data.items[value].name,
+                        quality: data.items[value].quality,
+                        itemLevel: data.items[value].itemLevel,
+                        stats: GetStats(data.items[value].stats),
+                        armor: data.items[value].armor
+                    };
+                }
+            });
             
             var lowestItemLevel = 1000;
             var highestItemLevel = 0;

@@ -8,15 +8,19 @@ td {
 }
 .uncommon {
     background: green;
+    opacity: 0.8;
 }
 .rare {
     background: blue;
+    opacity: 0.8;
 }
 .epic {
     background: purple;
+    opacity: 0.8;
 }
 .legendary {
-    background: orange;
+    background: darkorange;
+    opacity: 0.8;
 }
 text-right {
     text-align: right;
