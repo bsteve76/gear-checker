@@ -1,3 +1,4 @@
+// https://dev.battle.net/io-docs
 blizzApp.factory('BlizzardSvc', function($http, $q){
     var service = {};
 
@@ -20,7 +21,7 @@ blizzApp.factory('BlizzardSvc', function($http, $q){
     
     service.fetchToonData = function(realmName, toonName) {
         var character = "character/" + realmName + "/" + toonName;
-        var fields = "?fields=items,pets,mounts,hunterPets"
+        var fields = "?fields=items,pets,mounts,hunterPets,professions,statistics,titles"
         var url = host + character + fields + "&" + urlSuffix;
         var deferred = $q.defer();
 
