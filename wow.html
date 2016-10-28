@@ -68,17 +68,23 @@
 					<show-item item="items.trinket2" slot="Trinket"></show-item>
 				</div>
 				<div style="float:left;margin-left:20px">
-					iLevel {{items.avgItemLvlEquipped}}<br />
-                    Lowest Item: {{items.lowestItem.name}} ({{items.lowestItem.itemLevel}})<br />
-                    Highest Item: {{items.highestItem.name}} ({{items.highestItem.itemLevel}})<br />
-                    Achievement Points: {{toon.achievementPoints}}<br />
-                    Kills: {{stats.kills.quantity}}<br />
-                    {{stats.kills.most.name}}: {{stats.kills.most.highest}} ({{stats.kills.most.quantity}})<br />
-                    Honorable Kills: {{toon.honorableKills}}<br />
-                    Deaths: {{stats.deaths}}<br />
-                    Quests Completed: {{stats.questsCompleted}}<br />
-                    <span ng-repeat="t in stats.travel">{{t.name}}: {{t.quantity}}<br /></span>
-
+                    <div style="float:left;margin-left:20px;width:180px;">
+                        iLevel {{items.avgItemLvlEquipped}}<br />
+                        <span ng-repeat="p in power">{{p.name}}: {{p.quantity}}<br /></span>                    
+                    </div>
+                    <div style="float:left;margin-left:20px">
+                        Lowest Item: {{items.lowestItem.name}} ({{items.lowestItem.itemLevel}})<br />
+                        Highest Item: {{items.highestItem.name}} ({{items.highestItem.itemLevel}})<br />
+                        <p />
+                        Achievement Points: {{toon.achievementPoints}}<br />
+                        Kills: {{stats.kills.quantity}}<br />
+                        {{stats.kills.most.name}}: {{stats.kills.most.highest}} ({{stats.kills.most.quantity}})<br />
+                        Honorable Kills: {{toon.honorableKills}}<br />
+                        Deaths: {{stats.deaths}}<br />
+                        Quests Completed: {{stats.questsCompleted}}<br />
+                        <span ng-repeat="t in stats.travel">{{t.name}}: {{t.quantity}}<br /></span>
+                    </div>
+				    <div style="clear:both"></div>
                     <div>
                         <accordion>
                             <accordion-group heading="Pets ({{pets.length}})">

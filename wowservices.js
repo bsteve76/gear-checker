@@ -21,7 +21,7 @@ blizzApp.factory('BlizzardSvc', function($http, $q){
     
     service.fetchToonData = function(realmName, toonName) {
         var character = "character/" + realmName + "/" + toonName;
-        var fields = "?fields=items,pets,mounts,hunterPets,professions,statistics,titles"
+        var fields = "?fields=items,pets,mounts,hunterPets,professions,stats,statistics,titles"
         var url = host + character + fields + "&" + urlSuffix;
         var deferred = $q.defer();
 

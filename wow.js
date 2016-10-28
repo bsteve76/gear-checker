@@ -12,6 +12,7 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
     $scope.professions = [];
     $scope.titles = [];
     $scope.stats = {};
+    $scope.power = [];
 
     $scope.init = function() {
         $scope.toon = {
@@ -60,6 +61,7 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             questsCompleted: 0,
             travel: []
         };
+        $scope.power = [];
     }
 
     $scope.init();
@@ -70,6 +72,10 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             $scope.realms.all_realms.push(item.name);
         });
     });
+
+    String.prototype.capitalizeFirstLetter = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    }
 
     $scope.fetchToon = function() {
         $scope.init();
@@ -87,6 +93,25 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             $scope.toon.honorableKills = data.totalHonorableKills;
             $scope.toon.achievementPoints = data.achievementPoints;
             $scope.toon.avatarUrl = "http://render-api-us.worldofwarcraft.com/static-render/us/" + data.thumbnail;
+
+            $scope.power.push({name: "Health", quantity: data.stats.health});
+            $scope.power.push({name: data.stats.powerType.capitalizeFirstLetter(), quantity: data.stats.power});
+            $scope.power.push({name: "Strength", quantity: data.stats.str});
+            $scope.power.push({name: "Agility", quantity: data.stats.agi});
+            $scope.power.push({name: "Intellect", quantity: data.stats.int});
+            $scope.power.push({name: "Stamina", quantity: data.stats.sta});
+            $scope.power.push({name: "Crit", quantity: data.stats.crit});
+            $scope.power.push({name: "Haste", quantity: data.stats.haste});
+            $scope.power.push({name: "Mastery", quantity: data.stats.mastery});
+            $scope.power.push({name: "Versatility", quantity: data.stats.versatility});
+            $scope.power.push({name: "Spell Crit", quantity: data.stats.spellCrit});
+            $scope.power.push({name: "Armor", quantity: data.stats.armor});
+            $scope.power.push({name: "Dodge", quantity: data.stats.dodge});
+            $scope.power.push({name: "Parry", quantity: data.stats.parry});
+            $scope.power.push({name: "Block", quantity: data.stats.block});
+            $scope.power.push({name: "Main Hand DPS", quantity: data.stats.mainHandDps});
+            $scope.power.push({name: "Off Hand DPS", quantity: data.stats.offHandDps});
+            $scope.power.push({name: "Ranged DPS", quantity: data.stats.rangedDps});
 
             angular.forEach(data.statistics.subCategories[0].subCategories[0].statistics, function(stat) {
                 var highest;
