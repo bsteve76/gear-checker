@@ -1,108 +1,139 @@
 <html>
+
 <head>
-    <title>Blizzard API</title>
-    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="wow.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
-    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
-    <script src="wow.js"></script>
-    <script src="wowservices.js"></script>
-    <script src="wowdirectives.js"></script>
+	<title>Blizzard API</title>
+	<link href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+	<link href="wow.css" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+	<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+	<script src="wow.js"></script>
+	<script src="wowservices.js"></script>
+	<script src="wowdirectives.js"></script>
 </head>
+
 <body>
-<div ng-app="BlizzApp">
-    <div ng-controller="BlizzCtrl">
-        Server
-        <select ng-options="r for r in realms.all_realms" ng-model="realms.selected">
-            <option value="">Select Realm</option>
-        </select>
-        Toon <input type="text" ng-model="toonName" />
-        <input type="button" ng-click="fetchToon()" value="Fetch Toon" />
-        <br />
-        <div ng-show="toon.name != ''">
-        <div>
-            <span style="font-size: large; font-weight: bold">
-                {{toon.name}} - Level {{toon.level}} {{toon.race}} {{toon.class}}
-            </span>
-            <br />
-            <div style="width: 20%" ng-show="titles.length > 0">
-                <accordion>
-                    <accordion-group heading="Titles">
-                        <ul>
-                            <li ng-repeat="title in titles" ng-class="{bold: title.selected}">{{title.name}}</li>
-                        </ul>
-                    </accordion-group>
-                </accordion>
-            </div>
+	<div ng-app="BlizzApp">
+		<div ng-controller="BlizzCtrl">
+			Server
+			<select ng-options="r for r in realms.all_realms" ng-model="realms.selected">
+                <option value="">Select Realm</option>
+            </select>
+            Toon <input type="text" ng-model="toonName" />
+			<input type="button" ng-click="fetchToon()" value="Fetch Toon" />
 
-            iLevel {{items.avgItemLvlEquipped}}<br />
-            Lowest Item: {{items.lowestItem.name}} ({{items.lowestItem.itemLevel}})<br />
-            Highest Item: {{items.highestItem.name}} ({{items.highestItem.itemLevel}})
-        </div>
+			<br />
+			
+            <div ng-show="toon.name != ''">
+				Battlegroup: {{toon.battlegroup}}
 
-        <div style="float:left">
-          <show-item item="items.head" slot="Head"></show-item>
-          <show-item item="items.neck" slot="Neck"></show-item>
-          <show-item item="items.shoulder" slot="Shoulders"></show-item>
-          <show-item item="items.back" slot="Back"></show-item>
-          <show-item item="items.chest" slot="Chest"></show-item>
-          <show-item item="items.wrist" slot="Wrist"></show-item>
-          <show-item item="items.mainHand" slot="Main Hand"></show-item>
-          <show-item item="items.offHand" slot="Off Hand"></show-item>
-        </div>
-        <div style="float:left;margin-left:20px">
-          <show-item item="items.hands" slot="Hands"></show-item>
-          <show-item item="items.waist" slot="Waist"></show-item>
-          <show-item item="items.legs" slot="Legs"></show-item>
-          <show-item item="items.feet" slot="Feet"></show-item>
-          <show-item item="items.finger1" slot="Ring"></show-item>
-          <show-item item="items.finger2" slot="Ring"></show-item>
-          <show-item item="items.trinket1" slot="Trinket"></show-item>
-          <show-item item="items.trinket2" slot="Trinket"></show-item>
-        </div>
+                <div style="margin: 20px 0 120px 0">
+                    <img ng-src={{toon.avatarUrl}} style="float:left" />
+                    <div style="float:left;margin-left:20px">
+                        <span style="font-size: large; font-weight: bold">
+                            {{toon.name}} - Level {{toon.level}} {{toon.race}} {{toon.class}}
+                        </span>
+                        <br />
+                        <div ng-show="titles.length > 0">
+                            <accordion>
+                                <accordion-group heading="Titles">
+                                    <ul>
+                                        <li ng-repeat="title in titles" ng-class="{bold: title.selected}">{{title.name}}</li>
+                                    </ul>
+                                </accordion-group>
+                            </accordion>
+                        </div>
+                    </div>
+                </div>
 
-        <div style="clear:both"></div>
-        
-        <div style="float:left">
-            <accordion>
-                <accordion-group heading="Pets ({{pets.length}})">
-                    <ul>
-                        <li ng-repeat="pet in pets | orderBy: 'level' : reverse=true">{{pet.name}} - {{pet.level}}</li>
-                    </ul>
-                </accordion-group>
-            </accordion>
-        </div>        
-        
-        <div style="float:left; margin-left: 50px">
-            <accordion>
-                <accordion-group heading="Mounts ({{mounts.length}})">
-                    <ul>
-                        <li ng-repeat="mount in mounts | orderBy: 'name'">{{mount.name}}</li>
-                    </ul>
-                </accordion-group>
-            </accordion>
-        </div>
+				<div style="clear:both"></div>
 
-        <div style="float:left; margin-left: 50px" ng-show="hunterPets.length > 0">
-            <accordion>
-                <accordion-group heading="Hunter Pets ({{hunterPets.length}})">
-                    <ul>
-                        <li ng-repeat="hpet in hunterPets | orderBy: 'familyName'">{{hpet.familyName}} - {{hpet.name}}</li>
-                    </ul>
-                </accordion-group>
-            </accordion>
-        </div>
+				<div style="float:left">
+					<show-item item="items.head" slot="Head"></show-item>
+					<show-item item="items.neck" slot="Neck"></show-item>
+					<show-item item="items.shoulder" slot="Shoulders"></show-item>
+					<show-item item="items.back" slot="Back"></show-item>
+					<show-item item="items.chest" slot="Chest"></show-item>
+					<show-item item="items.wrist" slot="Wrist"></show-item>
+					<show-item item="items.mainHand" slot="Main Hand"></show-item>
+					<show-item item="items.offHand" slot="Off Hand"></show-item>
+				</div>
+				<div style="float:left;margin-left:20px">
+					<show-item item="items.hands" slot="Hands"></show-item>
+					<show-item item="items.waist" slot="Waist"></show-item>
+					<show-item item="items.legs" slot="Legs"></show-item>
+					<show-item item="items.feet" slot="Feet"></show-item>
+					<show-item item="items.finger1" slot="Ring"></show-item>
+					<show-item item="items.finger2" slot="Ring"></show-item>
+					<show-item item="items.trinket1" slot="Trinket"></show-item>
+					<show-item item="items.trinket2" slot="Trinket"></show-item>
+				</div>
+				<div style="float:left;margin-left:20px">
+					iLevel {{items.avgItemLvlEquipped}}<br />
+                    Lowest Item: {{items.lowestItem.name}} ({{items.lowestItem.itemLevel}})<br />
+                    Highest Item: {{items.highestItem.name}} ({{items.highestItem.itemLevel}})<br />
+                    Achievement Points: {{toon.achievementPoints}}<br />
+                    Kills: {{stats.kills.quantity}}<br />
+                    {{stats.kills.most.name}}: {{stats.kills.most.highest}} ({{stats.kills.most.quantity}})<br />
+                    Honorable Kills: {{toon.honorableKills}}<br />
+                    Deaths: {{stats.deaths}}<br />
+                    Quests Completed: {{stats.questsCompleted}}<br />
+                    <span ng-repeat="t in stats.travel">{{t.name}}: {{t.quantity}}<br /></span>
 
-        <div style="float:left; margin-left: 50px" ng-show="professions.length > 0">
-            <accordion>
-                <accordion-group heading="Professions">
-                    <ul>
-                        <li ng-repeat="p in professions">{{p.name}} - {{p.rank}} of {{p.maxRank}}</li>
-                    </ul>
-                </accordion-group>
-            </accordion>
-        </div>
-    </div>
-</div>
+                    <div>
+                        <accordion>
+                            <accordion-group heading="Pets ({{pets.length}})">
+                                <ul>
+                                    <li ng-repeat="pet in pets | orderBy: 'level' : reverse=true">{{pet.name}} - {{pet.level}}</li>
+                                </ul>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+
+                    <div>
+                        <accordion>
+                            <accordion-group heading="Mounts ({{mounts.length}})">
+                                <ul>
+                                    <li ng-repeat="mount in mounts | orderBy: 'name'">{{mount.name}}</li>
+                                </ul>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+
+                    <div ng-show="hunterPets.length > 0">
+                        <accordion>
+                            <accordion-group heading="Hunter Pets ({{hunterPets.length}})">
+                                <ul>
+                                    <li ng-repeat="hpet in hunterPets | orderBy: 'familyName'">{{hpet.familyName}} - {{hpet.name}}</li>
+                                </ul>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+
+                    <div ng-show="professions.length > 0">
+                        <accordion>
+                            <accordion-group heading="Professions">
+                                <ul>
+                                    <li ng-repeat="p in professions">{{p.name}} - {{p.rank}} of {{p.maxRank}}</li>
+                                </ul>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+
+                    <div ng-show="stats.consumables.length > 0">
+                        <accordion>
+                            <accordion-group heading="Consumables">
+                                <ul>
+                                    <li ng-repeat="c in stats.consumables">
+                                        {{c.name}}: <span ng-if="c.highest">{{c.highest}} ({{c.quantity}})</span> <span ng-if="!c.highest">{{c.quantity}}</span>
+                                    </li>
+                                </ul>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+				</div>
+
+			</div>
+		</div>
 </body>
+
 </html>

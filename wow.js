@@ -11,6 +11,7 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
     $scope.hunterPets = [];
     $scope.professions = [];
     $scope.titles = [];
+    $scope.stats = {};
 
     $scope.init = function() {
         $scope.toon = {
@@ -44,6 +45,21 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
         $scope.pets = [];
         $scope.mounts = [];
         $scope.hunterPets = [];
+        $scope.professions = [];
+        $scope.titles = [];
+        $scope.stats = {
+            consumables: [],
+            kills: {
+                most: {
+                    name: "",
+                    highest: "",
+                    quantity: 0
+                }
+            },
+            deaths: 0,
+            questsCompleted: 0,
+            travel: []
+        };
     }
 
     $scope.init();
@@ -67,7 +83,47 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             $scope.toon.ach_points = data.achievementPoints;
             $scope.toon.class = GetClass(data.class);
             $scope.toon.race = GetRace(data.race);
+            $scope.toon.battlegroup = data.battlegroup;
+            $scope.toon.honorableKills = data.totalHonorableKills;
+            $scope.toon.achievementPoints = data.achievementPoints;
+            $scope.toon.avatarUrl = "http://render-api-us.worldofwarcraft.com/static-render/us/" + data.thumbnail;
 
+            angular.forEach(data.statistics.subCategories[0].subCategories[0].statistics, function(stat) {
+                var highest;
+                if (stat.highest) {
+                    highest = stat.highest;
+                }
+
+                $scope.stats.consumables.push({
+                    name: stat.name,
+                    highest: highest,
+                    quantity: stat.quantity
+                });
+            });
+
+            $scope.stats.kills = {
+                quantity: data.statistics.subCategories[2].statistics[0].quantity
+            };
+
+            $scope.stats.kills.most = {
+                name: data.statistics.subCategories[2].subCategories[0].statistics[2].name,
+                highest: data.statistics.subCategories[2].subCategories[0].statistics[2].highest,
+                quantity: data.statistics.subCategories[2].subCategories[0].statistics[2].quantity
+            };
+            
+            $scope.stats.deaths = data.statistics.subCategories[3].statistics[0].quantity;
+            $scope.stats.questsCompleted = data.statistics.subCategories[4].statistics[0].quantity;
+
+            $scope.stats.travel.push({
+                name: data.statistics.subCategories[7].statistics[0].name,
+                quantity: data.statistics.subCategories[7].statistics[0].quantity
+            });
+            
+            $scope.stats.travel.push({
+                name: data.statistics.subCategories[7].statistics[4].name,
+                quantity: data.statistics.subCategories[7].statistics[4].quantity
+            });
+            
             $scope.items.avgItemLvl = data.items.averageItemLevel;
             $scope.items.avgItemLvlEquipped = data.items.averageItemLevelEquipped;
 

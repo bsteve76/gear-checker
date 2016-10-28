@@ -1,5 +1,7 @@
 body {
-    font-family: 'Segoe UI';        }
+    font-family: 'Segoe UI';
+    margin-left: 5px;        
+}
 table {
     border-collapse: collapse;
 }
