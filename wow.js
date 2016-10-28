@@ -9,6 +9,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
     $scope.pets = [];
     $scope.mounts = [];
     $scope.hunterPets = [];
+    $scope.professions = [];
+    $scope.titles = [];
 
     $scope.init = function() {
         $scope.toon = {
@@ -120,6 +122,34 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
                 $scope.hunterPets.push({ 
                     name: hpet.name,
                     familyName: hpet.familyName
+                });
+            });
+
+            angular.forEach(data.professions.primary, function(profession) {
+                $scope.professions.push({
+                    name: profession.name,
+                    rank: profession.rank,
+                    maxRank: profession.max
+                });
+            });
+
+            angular.forEach(data.professions.secondary, function(profession) {
+                $scope.professions.push({
+                    name: profession.name,
+                    rank: profession.rank,
+                    maxRank: profession.max
+                });
+            });
+
+            angular.forEach(data.titles, function(title) {
+                var selected = false;
+                if (title.selected) {
+                    selected = true;
+                }
+                
+                $scope.titles.push({
+                    name: title.name.replace("%s", $scope.toonName),
+                    selected: selected
                 });
             });
         });

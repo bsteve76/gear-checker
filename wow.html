@@ -25,6 +25,16 @@
                 {{toon.name}} - Level {{toon.level}} {{toon.race}} {{toon.class}}
             </span>
             <br />
+            <div style="width: 20%" ng-show="titles.length > 0">
+                <accordion>
+                    <accordion-group heading="Titles">
+                        <ul>
+                            <li ng-repeat="title in titles" ng-class="{bold: title.selected}">{{title.name}}</li>
+                        </ul>
+                    </accordion-group>
+                </accordion>
+            </div>
+
             iLevel {{items.avgItemLvlEquipped}}<br />
             Lowest Item: {{items.lowestItem.name}} ({{items.lowestItem.itemLevel}})<br />
             Highest Item: {{items.highestItem.name}} ({{items.highestItem.itemLevel}})
@@ -78,6 +88,16 @@
                 <accordion-group heading="Hunter Pets ({{hunterPets.length}})">
                     <ul>
                         <li ng-repeat="hpet in hunterPets | orderBy: 'familyName'">{{hpet.familyName}} - {{hpet.name}}</li>
+                    </ul>
+                </accordion-group>
+            </accordion>
+        </div>
+
+        <div style="float:left; margin-left: 50px" ng-show="professions.length > 0">
+            <accordion>
+                <accordion-group heading="Professions">
+                    <ul>
+                        <li ng-repeat="p in professions">{{p.name}} - {{p.rank}} of {{p.maxRank}}</li>
                     </ul>
                 </accordion-group>
             </accordion>
