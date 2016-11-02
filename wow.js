@@ -17,9 +17,11 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
     $scope.init = function() {
         $scope.toon = {
             name: "",
+            title: "",
             level: 0,
             gender: "",
-            ach_points: 0
+            ach_points: 0,
+            showTitle: false
         };
 
         $scope.items = {
@@ -222,17 +224,20 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
                 });
             });
 
+            var selectedTitle = "";
             angular.forEach(data.titles, function(title) {
-                var selected = false;
+                var fullTitle = title.name.replace("%s", $scope.toonName);
                 if (title.selected) {
-                    selected = true;
+                    selectedTitle = fullTitle;
+                    $scope.toon.title = fullTitle;
+                } else {
+                    $scope.titles.push(fullTitle);
                 }
-                
-                $scope.titles.push({
-                    name: title.name.replace("%s", $scope.toonName),
-                    selected: selected
-                });
             });
+
+            if (selectedTitle !== "") {
+                $scope.titles.unshift(selectedTitle);
+            }
         });
 
         $scope.loading = false;

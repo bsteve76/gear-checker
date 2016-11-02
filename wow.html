@@ -30,18 +30,14 @@
                     <img ng-src={{toon.avatarUrl}} style="float:left" />
                     <div style="float:left;margin-left:20px">
                         <span style="font-size: large; font-weight: bold">
-                            {{toon.name}} - Level {{toon.level}} {{toon.race}} {{toon.class}}
+                            <span ng-if="toon.showTitle">{{toon.title}}</span>
+                            <span ng-if="!toon.showTitle">{{toon.name}}</span>
+                            - Level {{toon.level}} {{toon.race}} {{toon.class}}
                         </span>
                         <br />
-                        <div ng-show="titles.length > 0">
-                            <accordion>
-                                <accordion-group heading="Titles">
-                                    <ul>
-                                        <li ng-repeat="title in titles" ng-class="{bold: title.selected}">{{title.name}}</li>
-                                    </ul>
-                                </accordion-group>
-                            </accordion>
-                        </div>
+                        Titles: <select ng-options="title for title in titles" ng-model="toon.title"></select>
+                        <br />
+                        <input type="checkbox" ng-model="toon.showTitle" /> Show Title
                     </div>
                 </div>
 
