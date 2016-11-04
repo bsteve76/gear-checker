@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI';
-    margin-left: 5px;        
+    margin: 5px 0 0 5px;        
 }
 table {
     border-collapse: collapse;
@@ -49,4 +49,7 @@ a {
 .loading {
     font-size: 24px;
     font-weight: bold;
+}
+.pad-top-10 {
+    padding-top: 10px;
 }

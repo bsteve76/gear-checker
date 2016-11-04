@@ -90,8 +90,13 @@
                     <div>
                         <accordion>
                             <accordion-group heading="Mounts ({{mounts.collectedCount}} of {{mounts.collectedCount + mounts.uncollectedCount}})">
-                                <ul>
-                                    <li ng-repeat="mount in mounts.mounts | orderBy: 'name'">
+                                Sort mounts by
+                                <input type="radio" ng-model="mounts.sortOrder" value="name"> Name
+                                <input type="radio" ng-model="mounts.sortOrder" value="flying"> Flying
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" ng-model="mounts.sortDesc" value="false"> Descending
+                                <ul class="pad-top-10">
+                                    <li ng-repeat="mount in mounts.mounts | orderBy: mounts.sortOrder : reverse=mounts.sortDesc">
                                         {{mount.name}}<br />Can fly? <b>{{mount.flying}}</b>
                                     </li>
                                 </ul>
@@ -102,8 +107,15 @@
                     <div>
                         <accordion>
                             <accordion-group heading="Pets ({{pets.collectedCount}} of {{pets.collectedCount + pets.uncollectedCount}})">
-                                <ul>
-                                    <li ng-repeat="pet in pets.pets | orderBy: 'level' : reverse=true" ng-class="{'uncommon-font': pet.quality == 2, 'rare-font': pet.quality == 3, 'epic-font': pet.quality == 4}">
+                                Sort pets by
+                                <input type="radio" ng-model="pets.sortOrder" value="name"> Name
+                                <input type="radio" ng-model="pets.sortOrder" value="level"> Level
+                                <input type="radio" ng-model="pets.sortOrder" value="quality"> Quality
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" ng-model="pets.sortDesc" value="false"> Descending
+                                <ul class="pad-top-10">
+                                    <li ng-repeat="pet in pets.pets | orderBy: pets.sortOrder : reverse=pets.sortDesc"
+                                        ng-class="{'uncommon-font': pet.quality == 2, 'rare-font': pet.quality == 3, 'epic-font': pet.quality == 4}">
                                         {{pet.name}} - {{pet.level}}<br />
                                         Can battle? <b>{{pet.canBattle}}</b>
                                     </li>
@@ -112,11 +124,16 @@
                         </accordion>
                     </div>
 
-                    <div ng-show="hunterPets.length > 0">
+                    <div ng-show="hunterPets.hunterPets.length > 0">
                         <accordion>
-                            <accordion-group heading="Hunter Pets ({{hunterPets.length}})">
+                            <accordion-group heading="Hunter Pets ({{hunterPets.hunterPets.length}})">
+                                Sort hunter pets by
+                                <input type="radio" ng-model="hunterPets.sortOrder" value="name"> Name
+                                <input type="radio" ng-model="hunterPets.sortOrder" value="role"> Role
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="checkbox" ng-model="hunterPets.sortDesc" value="false"> Descending
                                 <ul>
-                                    <li ng-repeat="hpet in hunterPets | orderBy: 'familyName'">
+                                    <li ng-repeat="hpet in hunterPets.hunterPets | orderBy: hunterPets.sortOrder : reverse=hunterPets.sortDesc">
                                         {{hpet.familyName}} - {{hpet.name}}<br />
                                         Role: <b>{{hpet.role}}</b>
                                     </li>

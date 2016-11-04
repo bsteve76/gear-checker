@@ -8,7 +8,7 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
     $scope.items = {};
     $scope.pets = {};
     $scope.mounts = {};
-    $scope.hunterPets = [];
+    $scope.hunterPets = {};
     $scope.professions = [];
     $scope.titles = [];
     $scope.stats = {};
@@ -47,7 +47,7 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
 
         $scope.pets = {};
         $scope.mounts = {};
-        $scope.hunterPets = [];
+        $scope.hunterPets = {};
         $scope.professions = [];
         $scope.titles = [];
         $scope.stats = {
@@ -189,6 +189,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             $scope.pets = {
                 collectedCount: data.pets.numCollected,
                 uncollectedCount: data.pets.numNotCollected,
+                sortOrder: "name",
+                sortDesc: false,
                 pets: []
             };
 
@@ -204,6 +206,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             $scope.mounts = {
                 collectedCount: data.mounts.numCollected,
                 uncollectedCount: data.mounts.numNotCollected,
+                sortOrder: "name",
+                sortDesc: false,
                 mounts: []
             };
 
@@ -214,13 +218,18 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
                 });
             });
 
+            $scope.hunterPets = {
+                sortOrder: "name",
+                sortDesc: false,
+                hunterPets: []
+            };
             angular.forEach(data.hunterPets, function(hpet) {
                 var role = "N/A";
                 if (hpet.spec !== undefined) {
                     role = hpet.spec.role;
                 }
 
-                $scope.hunterPets.push({ 
+                $scope.hunterPets.hunterPets.push({ 
                     name: hpet.name,
                     familyName: hpet.familyName,
                     role: role
