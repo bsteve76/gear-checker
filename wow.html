@@ -86,11 +86,14 @@
                         <span ng-repeat="t in stats.travel">{{t.name}}: {{t.quantity}}<br /></span>
                     </div>
 				    <div style="clear:both"></div>
+
                     <div>
                         <accordion>
-                            <accordion-group heading="Pets ({{pets.length}})">
+                            <accordion-group heading="Mounts ({{mounts.collectedCount}} of {{mounts.collectedCount + mounts.uncollectedCount}})">
                                 <ul>
-                                    <li ng-repeat="pet in pets | orderBy: 'level' : reverse=true">{{pet.name}} - {{pet.level}}</li>
+                                    <li ng-repeat="mount in mounts.mounts | orderBy: 'name'">
+                                        {{mount.name}}<br />Can fly? <b>{{mount.flying}}</b>
+                                    </li>
                                 </ul>
                             </accordion-group>
                         </accordion>
@@ -98,10 +101,11 @@
 
                     <div>
                         <accordion>
-                            <accordion-group heading="Mounts ({{mounts.length}})">
+                            <accordion-group heading="Pets ({{pets.collectedCount}} of {{pets.collectedCount + pets.uncollectedCount}})">
                                 <ul>
-                                    <li ng-repeat="mount in mounts | orderBy: 'name'">
-                                        {{mount.name}}<br />Can fly? <b>{{mount.flying}}</b>
+                                    <li ng-repeat="pet in pets.pets | orderBy: 'level' : reverse=true" ng-class="{'uncommon-font': pet.quality == 2, 'rare-font': pet.quality == 3, 'epic-font': pet.quality == 4}">
+                                        {{pet.name}} - {{pet.level}}<br />
+                                        Can battle? <b>{{pet.canBattle}}</b>
                                     </li>
                                 </ul>
                             </accordion-group>
@@ -112,7 +116,10 @@
                         <accordion>
                             <accordion-group heading="Hunter Pets ({{hunterPets.length}})">
                                 <ul>
-                                    <li ng-repeat="hpet in hunterPets | orderBy: 'familyName'">{{hpet.familyName}} - {{hpet.name}}</li>
+                                    <li ng-repeat="hpet in hunterPets | orderBy: 'familyName'">
+                                        {{hpet.familyName}} - {{hpet.name}}<br />
+                                        Role: <b>{{hpet.role}}</b>
+                                    </li>
                                 </ul>
                             </accordion-group>
                         </accordion>

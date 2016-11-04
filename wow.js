@@ -6,8 +6,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
     $scope.toonName = "Mordalo";
     $scope.toon = {};
     $scope.items = {};
-    $scope.pets = [];
-    $scope.mounts = [];
+    $scope.pets = {};
+    $scope.mounts = {};
     $scope.hunterPets = [];
     $scope.professions = [];
     $scope.titles = [];
@@ -45,8 +45,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             wrist: { id: 0, name: "", quality: 0, itemLevel: 0, stats: [], armor: 0 }
         };
 
-        $scope.pets = [];
-        $scope.mounts = [];
+        $scope.pets = {};
+        $scope.mounts = {};
         $scope.hunterPets = [];
         $scope.professions = [];
         $scope.titles = [];
@@ -186,24 +186,44 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
                 }
             });
 
+            $scope.pets = {
+                collectedCount: data.pets.numCollected,
+                uncollectedCount: data.pets.numNotCollected,
+                pets: []
+            };
+
             angular.forEach(data.pets.collected, function(pet) {
-                $scope.pets.push({
+                $scope.pets.pets.push({
                     name: pet.name,
-                    level: pet.stats.level
+                    level: pet.stats.level,
+                    canBattle: pet.canBattle ? "Yes" : "No",
+                    quality: pet.qualityId
                 });
             });
 
+            $scope.mounts = {
+                collectedCount: data.mounts.numCollected,
+                uncollectedCount: data.mounts.numNotCollected,
+                mounts: []
+            };
+
             angular.forEach(data.mounts.collected, function(mount) {
-                $scope.mounts.push({ 
+                $scope.mounts.mounts.push({ 
                     name: mount.name,
                     flying: mount.isFlying ? "Yes" : "No"
                 });
             });
 
             angular.forEach(data.hunterPets, function(hpet) {
+                var role = "N/A";
+                if (hpet.spec !== undefined) {
+                    role = hpet.spec.role;
+                }
+
                 $scope.hunterPets.push({ 
                     name: hpet.name,
-                    familyName: hpet.familyName
+                    familyName: hpet.familyName,
+                    role: role
                 });
             });
 

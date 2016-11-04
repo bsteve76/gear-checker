@@ -24,6 +24,18 @@ td {
     background: darkorange;
     opacity: 0.8;
 }
+.uncommon-font {
+    color: green;
+    opacity: 0.8;
+}
+.rare-font {
+    color: blue;
+    opacity: 0.8;
+}
+.epic-font {
+    color: purple;
+    opacity: 0.8;
+}
 text-right {
     text-align: right;
 }
