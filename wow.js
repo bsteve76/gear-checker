@@ -80,8 +80,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
     }
 
     $scope.fetchToon = function() {
-        $scope.init();
         $scope.loading = true;
+        $scope.init();
 
         BlizzardSvc.fetchToonData($scope.realms.selected, $scope.toonName)
         .then(function(data) {
@@ -196,8 +196,7 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             angular.forEach(data.mounts.collected, function(mount) {
                 $scope.mounts.push({ 
                     name: mount.name,
-                    ground: mount.isGround,
-                    flying: mount.isFlying
+                    flying: mount.isFlying ? "Yes" : "No"
                 });
             });
 
@@ -238,9 +237,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             if (selectedTitle !== "") {
                 $scope.titles.unshift(selectedTitle);
             }
+            $scope.loading = false;
         });
-
-        $scope.loading = false;
     }
 
     function GetClass(classId) {

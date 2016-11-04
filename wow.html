@@ -23,7 +23,12 @@
 
 			<br />
 			
-            <div ng-show="toon.name != ''">
+            <div ng-if="loading" class="loading">
+                <img src="troll-guitar.gif" />
+                <span>Fetching data for {{toonName}}...</span>
+            </div>
+
+            <div ng-if="toon.name != ''">
 				Battlegroup: {{toon.battlegroup}}
 
                 <div style="margin: 20px 0 120px 0">
@@ -95,7 +100,9 @@
                         <accordion>
                             <accordion-group heading="Mounts ({{mounts.length}})">
                                 <ul>
-                                    <li ng-repeat="mount in mounts | orderBy: 'name'">{{mount.name}}</li>
+                                    <li ng-repeat="mount in mounts | orderBy: 'name'">
+                                        {{mount.name}}<br />Can fly? <b>{{mount.flying}}</b>
+                                    </li>
                                 </ul>
                             </accordion-group>
                         </accordion>
@@ -136,6 +143,7 @@
 
 			</div>
 		</div>
+    </div>
 </body>
 
 </html>

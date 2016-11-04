@@ -34,3 +34,7 @@ a {
 .bold {
     font-weight: bold;
 }
+.loading {
+    font-size: 24px;
+    font-weight: bold;
+}
