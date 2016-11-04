@@ -61,7 +61,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             },
             deaths: 0,
             questsCompleted: 0,
-            travel: []
+            travel: [],
+            combat: []
         };
         $scope.power = [];
     }
@@ -128,6 +129,13 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
                 });
             });
 
+            angular.forEach(data.statistics.subCategories[1].statistics, function(stat) {
+                $scope.stats.combat.push({
+                    name: stat.name,
+                    quantity: stat.quantity
+                });
+            });
+
             $scope.stats.kills = {
                 quantity: data.statistics.subCategories[2].statistics[0].quantity
             };
@@ -140,6 +148,7 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             
             $scope.stats.deaths = data.statistics.subCategories[3].statistics[0].quantity;
             $scope.stats.questsCompleted = data.statistics.subCategories[4].statistics[0].quantity;
+            $scope.stats.dailiesCompleted = data.statistics.subCategories[4].statistics[2].quantity;
 
             $scope.stats.travel.push({
                 name: data.statistics.subCategories[7].statistics[0].name,

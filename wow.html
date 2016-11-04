@@ -71,19 +71,22 @@
 				<div style="float:left;margin-left:20px">
                     <div style="float:left;margin-left:20px;width:180px;">
                         iLevel {{items.avgItemLvlEquipped}}<br />
-                        <span ng-repeat="p in power">{{p.name}}: {{p.quantity}}<br /></span>                    
+                        <span ng-repeat="p in power">{{p.name}}: {{p.quantity | number}}<br /></span>                    
                     </div>
                     <div style="float:left;margin-left:20px">
                         Lowest Item: {{items.lowestItem.name}} ({{items.lowestItem.itemLevel}})<br />
                         Highest Item: {{items.highestItem.name}} ({{items.highestItem.itemLevel}})<br />
                         <p />
-                        Achievement Points: {{toon.achievementPoints}}<br />
-                        Kills: {{stats.kills.quantity}}<br />
-                        {{stats.kills.most.name}}: {{stats.kills.most.highest}} ({{stats.kills.most.quantity}})<br />
-                        Honorable Kills: {{toon.honorableKills}}<br />
-                        Deaths: {{stats.deaths}}<br />
+                        Achievement Points: {{toon.achievementPoints | number}}<br />
+                        Kills: {{stats.kills.quantity | number}}<br />
+                        {{stats.kills.most.name}}: {{stats.kills.most.highest}} ({{stats.kills.most.quantity | number}})<br />
+                        Honorable Kills: {{toon.honorableKills | number}}<br />
+                        Deaths: {{stats.deaths | number}}<br />
                         Quests Completed: {{stats.questsCompleted}}<br />
-                        <span ng-repeat="t in stats.travel">{{t.name}}: {{t.quantity}}<br /></span>
+                        Dailies Completed: {{stats.dailiesCompleted}}<br />
+                        <span ng-repeat="t in stats.travel">{{t.name}}: {{t.quantity | number}}<br /></span>
+                        <br />
+                        <span ng-repeat="t in stats.combat">{{t.name}}: {{t.quantity | number}}<br /></span>
                     </div>
 				    <div style="clear:both"></div>
 
