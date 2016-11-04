@@ -46,10 +46,16 @@ a {
 .bold {
     font-weight: bold;
 }
+.semibold {
+    font-weight: 600;
+}
 .loading {
     font-size: 24px;
     font-weight: bold;
 }
 .pad-top-10 {
     padding-top: 10px;
+}
+.panel-heading {
+    background-color: lightblue !important;
 }
