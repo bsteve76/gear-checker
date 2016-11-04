@@ -21,7 +21,8 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             level: 0,
             gender: "",
             ach_points: 0,
-            showTitle: false
+            showTitle: false,
+            classColor: ""
         };
 
         $scope.items = {
@@ -90,7 +91,9 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
             $scope.toon.level = data.level;
             $scope.toon.gender = (data.gender == 0) ? "M" : "F";
             $scope.toon.ach_points = data.achievementPoints;
-            $scope.toon.class = GetClass(data.class);
+            var toonClass = GetClass(data.class)
+            $scope.toon.class = toonClass.class;
+            $scope.toon.classColor = toonClass.color;
             $scope.toon.race = GetRace(data.race);
             $scope.toon.battlegroup = data.battlegroup;
             $scope.toon.honorableKills = data.totalHonorableKills;
@@ -280,21 +283,27 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
     }
 
     function GetClass(classId) {
-        var toonClass = "";
+        var toon = {
+            class: "",
+            color: ""
+        };
+
         switch (classId) {
-            case 1: toonClass = "Warrior"; break;
-            case 2: toonClass = "Paladin"; break;
-            case 3: toonClass = "Hunter"; break;
-            case 4: toonClass = "Rogue"; break;
-            case 5: toonClass = "Priest"; break;
-            case 6: toonClass = "Death Knight"; break;
-            case 7: toonClass = "Shaman"; break;
-            case 8: toonClass = "Mage"; break;
-            case 9: toonClass = "Warlock"; break;
-            case 10: toonClass = "Monk"; break;
-            case 11: toonClass = "Druid"; break;
+            case 1: toon.class = "Warrior"; break;
+            case 2: toon.class = "Paladin"; break;
+            case 3: toon.class = "Hunter"; break;
+            case 4: toon.class = "Rogue"; break;
+            case 5: toon.class = "Priest"; break;
+            case 6: toon.class = "Death Knight"; break;
+            case 7: toon.class = "Shaman"; break;
+            case 8: toon.class = "Mage"; break;
+            case 9: toon.class = "Warlock"; break;
+            case 10: toon.class = "Monk"; break;
+            case 11: toon.class = "Druid"; break;
         }
-        return toonClass;
+        
+        toon.color = toon.class.replace(" ", "-").toLowerCase();
+        return toon;
     }
 
     function GetRace(raceId) {

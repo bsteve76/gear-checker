@@ -14,38 +14,144 @@
 <body>
 	<div ng-app="BlizzApp">
 		<div ng-controller="BlizzCtrl">
-			Server
-			<select ng-options="r for r in realms.all_realms" ng-model="realms.selected">
-                <option value="">Select Realm</option>
-            </select>
-            Toon <input type="text" ng-model="toonName" on-enter="fetchToon()" />
-			<input type="button" ng-click="fetchToon()" value="Fetch Toon" />
-			<br />
-            <div ng-if="loading" class="loading">
-                <img src="troll-guitar.gif" />
-                <span>Fetching data for {{toonName}}...</span>
-            </div>
-
-            <div ng-if="toon.name != ''">
-				Battlegroup: {{toon.battlegroup}}
-
-                <div style="margin: 20px 0 120px 0">
-                    <img ng-src={{toon.avatarUrl}} style="float:left" />
-                    <div style="float:left;margin-left:20px">
-                        <span style="font-size: large; font-weight: bold">
-                            <span ng-if="toon.showTitle">{{toon.title}}</span>
-                            <span ng-if="!toon.showTitle">{{toon.name}}</span>
-                            - Level {{toon.level}} {{toon.race}} {{toon.class}}
-                        </span>
-                        <br />
-                        Titles: <select ng-options="title for title in titles" ng-model="toon.title"></select>
-                        <br />
-                        <input type="checkbox" ng-model="toon.showTitle" /> Show Title
-                    </div>
+            <div style="float:left">
+                Server
+                <select ng-options="r for r in realms.all_realms" ng-model="realms.selected">
+                    <option value="">Select Realm</option>
+                </select>
+                Toon <input type="text" ng-model="toonName" on-enter="fetchToon()" />
+                <input type="button" ng-click="fetchToon()" value="Fetch Toon" />
+                <br />
+                <div ng-if="loading" class="loading">
+                    <img src="troll-guitar.gif" />
+                    <span>Fetching data for {{toonName}}...</span>
                 </div>
 
-				<div style="clear:both"></div>
+                <div ng-if="toon.name != ''">
+                    Battlegroup: {{toon.battlegroup}}
 
+                    <div style="margin: 20px 0 120px 0">
+                        <img ng-src={{toon.avatarUrl}} style="float:left" />
+                        <div style="float:left;margin-left:20px">
+                            <span style="font-size: large; font-weight: bold">
+                                <span ng-if="toon.showTitle">{{toon.title}}</span>
+                                <span ng-if="!toon.showTitle">{{toon.name}}</span>
+                                <br />
+                                Level {{toon.level}} <span ng-class="toon.classColor">{{toon.race}} {{toon.class}}</span>
+                            </span>
+                            <br />
+                            Titles: <select ng-options="title for title in titles" ng-model="toon.title"></select>
+                            <br />
+                            <input type="checkbox" ng-model="toon.showTitle" /> Show Title
+                        </div>
+                    </div>
+
+                    <div style="clear:both"></div>
+
+                    <div style="float:left;margin-left:20px">
+                        <div style="float:left;margin-left:20px;width:180px;">
+                            iLevel: <span class="semibold">{{items.avgItemLvlEquipped}}</span><br />
+                            <span ng-repeat="p in power">{{p.name}}: <span class="semibold">{{p.quantity | number}}</span><br /></span>                    
+                        </div>
+                        <div style="float:left;margin-left:20px">
+                            Lowest Item: {{items.lowestItem.name}} (<span class="semibold">{{items.lowestItem.itemLevel}}</span>)<br />
+                            Highest Item: {{items.highestItem.name}} (<span class="semibold">{{items.highestItem.itemLevel}}</span>)<br /><br />
+
+                            Achievement Points: <span class="semibold">{{toon.achievementPoints | number}}</span><br />
+                            Deaths: <span class="semibold">{{stats.deaths | number}}</span><br />
+                            Kills: <span class="semibold">{{stats.kills.quantity | number}}</span><br />
+                            Honorable Kills: <span class="semibold">{{toon.honorableKills | number}}</span><br />
+                            {{stats.kills.most.name}}: {{stats.kills.most.highest}} (<span class="semibold">{{stats.kills.most.quantity | number}}</span>)<br />
+                            Quests Completed: <span class="semibold">{{stats.questsCompleted}}</span><br />
+                            Dailies Completed: <span class="semibold">{{stats.dailiesCompleted}}</span><br />
+
+                            <span ng-repeat="t in stats.travel">{{t.name}}: <span class="semibold">{{t.quantity | number}}</span><br /></span>
+                            <br />
+                            <span ng-repeat="t in stats.combat">{{t.name}}: <span class="semibold">{{t.quantity | number}}</span><br /></span>
+                        </div>
+                        <div style="clear:both" class="pad-top-10"></div>
+
+                        <div>
+                            <accordion>
+                                <accordion-group heading="Mounts ({{mounts.collectedCount}} of {{mounts.collectedCount + mounts.uncollectedCount}})">
+                                    Sort mounts by
+                                    <input type="radio" ng-model="mounts.sortOrder" value="name"> Name
+                                    <input type="radio" ng-model="mounts.sortOrder" value="flying"> Flying
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" ng-model="mounts.sortDesc" value="false"> Descending
+                                    <ul class="pad-top-10">
+                                        <li ng-repeat="mount in mounts.mounts | orderBy: mounts.sortOrder : reverse=mounts.sortDesc">
+                                            {{mount.name}}<br />Can fly? <b>{{mount.flying}}</b>
+                                        </li>
+                                    </ul>
+                                </accordion-group>
+                            </accordion>
+                        </div>
+
+                        <div>
+                            <accordion>
+                                <accordion-group heading="Pets ({{pets.collectedCount}} of {{pets.collectedCount + pets.uncollectedCount}})">
+                                    Sort pets by
+                                    <input type="radio" ng-model="pets.sortOrder" value="name"> Name
+                                    <input type="radio" ng-model="pets.sortOrder" value="level"> Level
+                                    <input type="radio" ng-model="pets.sortOrder" value="quality"> Quality
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" ng-model="pets.sortDesc" value="false"> Descending
+                                    <ul class="pad-top-10">
+                                        <li ng-repeat="pet in pets.pets | orderBy: pets.sortOrder : reverse=pets.sortDesc"
+                                            ng-class="{'uncommon-font': pet.quality == 2, 'rare-font': pet.quality == 3, 'epic-font': pet.quality == 4}">
+                                            {{pet.name}} - {{pet.level}}<br />
+                                            Can battle? <b>{{pet.canBattle}}</b>
+                                        </li>
+                                    </ul>
+                                </accordion-group>
+                            </accordion>
+                        </div>
+
+                        <div ng-show="hunterPets.hunterPets.length > 0">
+                            <accordion>
+                                <accordion-group heading="Hunter Pets ({{hunterPets.hunterPets.length}})">
+                                    Sort hunter pets by
+                                    <input type="radio" ng-model="hunterPets.sortOrder" value="name"> Name
+                                    <input type="radio" ng-model="hunterPets.sortOrder" value="role"> Role
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" ng-model="hunterPets.sortDesc" value="false"> Descending
+                                    <ul>
+                                        <li ng-repeat="hpet in hunterPets.hunterPets | orderBy: hunterPets.sortOrder : reverse=hunterPets.sortDesc">
+                                            {{hpet.familyName}} - {{hpet.name}}<br />
+                                            Role: <b>{{hpet.role}}</b>
+                                        </li>
+                                    </ul>
+                                </accordion-group>
+                            </accordion>
+                        </div>
+
+                        <div ng-show="professions.length > 0">
+                            <accordion>
+                                <accordion-group heading="Professions">
+                                    <ul>
+                                        <li ng-repeat="p in professions">{{p.name}} - {{p.rank}} of {{p.maxRank}}</li>
+                                    </ul>
+                                </accordion-group>
+                            </accordion>
+                        </div>
+
+                        <div ng-show="stats.consumables.length > 0">
+                            <accordion>
+                                <accordion-group heading="Consumables">
+                                    <ul>
+                                        <li ng-repeat="c in stats.consumables">
+                                            {{c.name}}: <span ng-if="c.highest">{{c.highest}} ({{c.quantity}})</span> <span ng-if="!c.highest">{{c.quantity}}</span>
+                                        </li>
+                                    </ul>
+                                </accordion-group>
+                            </accordion>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div style="float:left; margin-left: 30px;" ng-if="toon.name != ''">
 				<div style="float:left">
 					<show-item item="items.head" slot="Head"></show-item>
 					<show-item item="items.neck" slot="Neck"></show-item>
@@ -66,108 +172,8 @@
 					<show-item item="items.trinket1" slot="Trinket"></show-item>
 					<show-item item="items.trinket2" slot="Trinket"></show-item>
 				</div>
-				<div style="float:left;margin-left:20px">
-                    <div style="float:left;margin-left:20px;width:180px;">
-                        iLevel: <span class="semibold">{{items.avgItemLvlEquipped}}</span><br />
-                        <span ng-repeat="p in power">{{p.name}}: <span class="semibold">{{p.quantity | number}}</span><br /></span>                    
-                    </div>
-                    <div style="float:left;margin-left:20px">
-                        Lowest Item: {{items.lowestItem.name}} (<span class="semibold">{{items.lowestItem.itemLevel}}</span>)<br />
-                        Highest Item: {{items.highestItem.name}} (<span class="semibold">{{items.highestItem.itemLevel}}</span>)<br /><br />
+            </div>
 
-                        Achievement Points: <span class="semibold">{{toon.achievementPoints | number}}</span><br />
-                        Deaths: <span class="semibold">{{stats.deaths | number}}</span><br />
-                        Kills: <span class="semibold">{{stats.kills.quantity | number}}</span><br />
-                        Honorable Kills: <span class="semibold">{{toon.honorableKills | number}}</span><br />
-                        {{stats.kills.most.name}}: {{stats.kills.most.highest}} (<span class="semibold">{{stats.kills.most.quantity | number}}</span>)<br />
-                        Quests Completed: <span class="semibold">{{stats.questsCompleted}}</span><br />
-                        Dailies Completed: <span class="semibold">{{stats.dailiesCompleted}}</span><br />
-
-                        <span ng-repeat="t in stats.travel">{{t.name}}: <span class="semibold">{{t.quantity | number}}</span><br /></span>
-                        <br />
-                        <span ng-repeat="t in stats.combat">{{t.name}}: <span class="semibold">{{t.quantity | number}}</span><br /></span>
-                    </div>
-				    <div style="clear:both" class="pad-top-10"></div>
-
-                    <div>
-                        <accordion>
-                            <accordion-group heading="Mounts ({{mounts.collectedCount}} of {{mounts.collectedCount + mounts.uncollectedCount}})">
-                                Sort mounts by
-                                <input type="radio" ng-model="mounts.sortOrder" value="name"> Name
-                                <input type="radio" ng-model="mounts.sortOrder" value="flying"> Flying
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" ng-model="mounts.sortDesc" value="false"> Descending
-                                <ul class="pad-top-10">
-                                    <li ng-repeat="mount in mounts.mounts | orderBy: mounts.sortOrder : reverse=mounts.sortDesc">
-                                        {{mount.name}}<br />Can fly? <b>{{mount.flying}}</b>
-                                    </li>
-                                </ul>
-                            </accordion-group>
-                        </accordion>
-                    </div>
-
-                    <div>
-                        <accordion>
-                            <accordion-group heading="Pets ({{pets.collectedCount}} of {{pets.collectedCount + pets.uncollectedCount}})">
-                                Sort pets by
-                                <input type="radio" ng-model="pets.sortOrder" value="name"> Name
-                                <input type="radio" ng-model="pets.sortOrder" value="level"> Level
-                                <input type="radio" ng-model="pets.sortOrder" value="quality"> Quality
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" ng-model="pets.sortDesc" value="false"> Descending
-                                <ul class="pad-top-10">
-                                    <li ng-repeat="pet in pets.pets | orderBy: pets.sortOrder : reverse=pets.sortDesc"
-                                        ng-class="{'uncommon-font': pet.quality == 2, 'rare-font': pet.quality == 3, 'epic-font': pet.quality == 4}">
-                                        {{pet.name}} - {{pet.level}}<br />
-                                        Can battle? <b>{{pet.canBattle}}</b>
-                                    </li>
-                                </ul>
-                            </accordion-group>
-                        </accordion>
-                    </div>
-
-                    <div ng-show="hunterPets.hunterPets.length > 0">
-                        <accordion>
-                            <accordion-group heading="Hunter Pets ({{hunterPets.hunterPets.length}})">
-                                Sort hunter pets by
-                                <input type="radio" ng-model="hunterPets.sortOrder" value="name"> Name
-                                <input type="radio" ng-model="hunterPets.sortOrder" value="role"> Role
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="checkbox" ng-model="hunterPets.sortDesc" value="false"> Descending
-                                <ul>
-                                    <li ng-repeat="hpet in hunterPets.hunterPets | orderBy: hunterPets.sortOrder : reverse=hunterPets.sortDesc">
-                                        {{hpet.familyName}} - {{hpet.name}}<br />
-                                        Role: <b>{{hpet.role}}</b>
-                                    </li>
-                                </ul>
-                            </accordion-group>
-                        </accordion>
-                    </div>
-
-                    <div ng-show="professions.length > 0">
-                        <accordion>
-                            <accordion-group heading="Professions">
-                                <ul>
-                                    <li ng-repeat="p in professions">{{p.name}} - {{p.rank}} of {{p.maxRank}}</li>
-                                </ul>
-                            </accordion-group>
-                        </accordion>
-                    </div>
-
-                    <div ng-show="stats.consumables.length > 0">
-                        <accordion>
-                            <accordion-group heading="Consumables">
-                                <ul>
-                                    <li ng-repeat="c in stats.consumables">
-                                        {{c.name}}: <span ng-if="c.highest">{{c.highest}} ({{c.quantity}})</span> <span ng-if="!c.highest">{{c.quantity}}</span>
-                                    </li>
-                                </ul>
-                            </accordion-group>
-                        </accordion>
-                    </div>
-				</div>
-
-			</div>
 		</div>
     </div>
 </body>

@@ -1,6 +1,7 @@
 body {
     font-family: 'Segoe UI';
-    margin: 5px 0 0 5px;        
+    margin: 5px 0 0 5px;
+    background-color: lightgray;      
 }
 table {
     border-collapse: collapse;
@@ -58,4 +59,43 @@ a {
 }
 .panel-heading {
     background-color: lightblue !important;
+}
+.font-outline {
+    text-shadow: -1px 0 gray, 0 1px gray, 1px 0 gray, 0 -1px gray;
+}
+.death-knight {
+	color: red;
+}
+.demon-hunter {
+	color: darkmagenta;
+}
+.druid {
+	color: orange;
+}
+.hunter {
+	color: green;
+}
+.mage {
+	color: lightblue;
+}
+.monk {
+	color: springgreen;
+}
+.paladin {
+	color: pink;
+}
+.priest {
+	color: white;
+}
+.rogue {
+	color: yellow;
+}
+.shaman {
+	color: blue;
+}
+.warlock {
+	color: purple;
+}
+.warrior {
+	color: tan;
 }
