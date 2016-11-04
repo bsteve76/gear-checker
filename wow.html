@@ -18,11 +18,9 @@
 			<select ng-options="r for r in realms.all_realms" ng-model="realms.selected">
                 <option value="">Select Realm</option>
             </select>
-            Toon <input type="text" ng-model="toonName" />
+            Toon <input type="text" ng-model="toonName" on-enter="fetchToon()" />
 			<input type="button" ng-click="fetchToon()" value="Fetch Toon" />
-
 			<br />
-			
             <div ng-if="loading" class="loading">
                 <img src="troll-guitar.gif" />
                 <span>Fetching data for {{toonName}}...</span>
@@ -70,7 +68,7 @@
 				</div>
 				<div style="float:left;margin-left:20px">
                     <div style="float:left;margin-left:20px;width:180px;">
-                        iLevel {{items.avgItemLvlEquipped}}<br />
+                        iLevel: <span class="semibold">{{items.avgItemLvlEquipped}}</span><br />
                         <span ng-repeat="p in power">{{p.name}}: <span class="semibold">{{p.quantity | number}}</span><br /></span>                    
                     </div>
                     <div style="float:left;margin-left:20px">
@@ -89,7 +87,7 @@
                         <br />
                         <span ng-repeat="t in stats.combat">{{t.name}}: <span class="semibold">{{t.quantity | number}}</span><br /></span>
                     </div>
-				    <div style="clear:both"></div>
+				    <div style="clear:both" class="pad-top-10"></div>
 
                     <div>
                         <accordion>
