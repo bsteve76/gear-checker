@@ -1,6 +1,8 @@
 var blizzApp = angular.module("BlizzApp", ["ui.bootstrap"]);
+blizzApp.controller("BlizzCtrl", BlizzCtrl);
+BlizzCtrl.$inject = ["$scope","$http","BlizzardSvc"];
 
-blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
+function BlizzCtrl($scope, $http, BlizzardSvc) {
     $scope.loading = false;
     $scope.realms = { selected: "Windrunner", all_realms: [] };
     $scope.toonName = "Mordalo";
@@ -86,199 +88,228 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
         $scope.init();
 
         BlizzardSvc.fetchToonData($scope.realms.selected, $scope.toonName)
-        .then(function(data) {
-            $scope.toon.name = data.name;
-            $scope.toon.level = data.level;
-            $scope.toon.gender = (data.gender == 0) ? "M" : "F";
-            $scope.toon.ach_points = data.achievementPoints;
-            var toonClass = GetClass(data.class)
-            $scope.toon.class = toonClass.class;
-            $scope.toon.classColor = toonClass.color;
-            $scope.toon.race = GetRace(data.race);
-            $scope.toon.battlegroup = data.battlegroup;
-            $scope.toon.honorableKills = data.totalHonorableKills;
-            $scope.toon.achievementPoints = data.achievementPoints;
-            $scope.toon.avatarUrl = "http://render-api-us.worldofwarcraft.com/static-render/us/" + data.thumbnail;
+            .then(processToon);
+    }
 
-            $scope.power.push({name: "Health", quantity: data.stats.health});
-            $scope.power.push({name: data.stats.powerType.capitalizeFirstLetter(), quantity: data.stats.power});
-            $scope.power.push({name: "Strength", quantity: data.stats.str});
-            $scope.power.push({name: "Agility", quantity: data.stats.agi});
-            $scope.power.push({name: "Intellect", quantity: data.stats.int});
-            $scope.power.push({name: "Stamina", quantity: data.stats.sta});
-            $scope.power.push({name: "Crit", quantity: data.stats.crit});
-            $scope.power.push({name: "Haste", quantity: data.stats.haste});
-            $scope.power.push({name: "Mastery", quantity: data.stats.mastery});
-            $scope.power.push({name: "Versatility", quantity: data.stats.versatility});
-            $scope.power.push({name: "Spell Crit", quantity: data.stats.spellCrit});
-            $scope.power.push({name: "Armor", quantity: data.stats.armor});
-            $scope.power.push({name: "Dodge", quantity: data.stats.dodge});
-            $scope.power.push({name: "Parry", quantity: data.stats.parry});
-            $scope.power.push({name: "Block", quantity: data.stats.block});
-            $scope.power.push({name: "Main Hand DPS", quantity: data.stats.mainHandDps});
-            $scope.power.push({name: "Off Hand DPS", quantity: data.stats.offHandDps});
-            $scope.power.push({name: "Ranged DPS", quantity: data.stats.rangedDps});
+    function processToon(data) {
+        setToon(data);
+        setPower(data);
+        setStats(data);
+        setItems(data);        
+        setPets(data);
+        setMounts(data);
+        setHunterPets(data);
+        setProfessions(data);
+        $scope.loading = false;
+    }
 
-            angular.forEach(data.statistics.subCategories[0].subCategories[0].statistics, function(stat) {
-                var highest;
-                if (stat.highest) {
-                    highest = stat.highest;
-                }
+    function setToon(data) {
+        $scope.toon.name = data.name;
+        $scope.toon.level = data.level;
+        $scope.toon.gender = (data.gender == 0) ? "M" : "F";
+        $scope.toon.ach_points = data.achievementPoints;
+        var toonClass = GetClass(data.class)
+        $scope.toon.class = toonClass.class;
+        $scope.toon.classColor = toonClass.color;
+        $scope.toon.race = GetRace(data.race);
+        $scope.toon.battlegroup = data.battlegroup;
+        $scope.toon.honorableKills = data.totalHonorableKills;
+        $scope.toon.achievementPoints = data.achievementPoints;
+        $scope.toon.avatarUrl = "http://render-api-us.worldofwarcraft.com/static-render/us/" + data.thumbnail;
 
-                $scope.stats.consumables.push({
-                    name: stat.name,
-                    highest: highest,
-                    quantity: stat.quantity
-                });
-            });
-
-            angular.forEach(data.statistics.subCategories[1].statistics, function(stat) {
-                $scope.stats.combat.push({
-                    name: stat.name,
-                    quantity: stat.quantity
-                });
-            });
-
-            $scope.stats.kills = {
-                quantity: data.statistics.subCategories[2].statistics[0].quantity
-            };
-
-            $scope.stats.kills.most = {
-                name: data.statistics.subCategories[2].subCategories[0].statistics[2].name,
-                highest: data.statistics.subCategories[2].subCategories[0].statistics[2].highest,
-                quantity: data.statistics.subCategories[2].subCategories[0].statistics[2].quantity
-            };
-            
-            $scope.stats.deaths = data.statistics.subCategories[3].statistics[0].quantity;
-            $scope.stats.questsCompleted = data.statistics.subCategories[4].statistics[0].quantity;
-            $scope.stats.dailiesCompleted = data.statistics.subCategories[4].statistics[2].quantity;
-
-            $scope.stats.travel.push({
-                name: data.statistics.subCategories[7].statistics[0].name,
-                quantity: data.statistics.subCategories[7].statistics[0].quantity
-            });
-            
-            $scope.stats.travel.push({
-                name: data.statistics.subCategories[7].statistics[4].name,
-                quantity: data.statistics.subCategories[7].statistics[4].quantity
-            });
-            
-            $scope.items.avgItemLvl = data.items.averageItemLevel;
-            $scope.items.avgItemLvlEquipped = data.items.averageItemLevelEquipped;
-
-            var slots = ["back","chest","feet","finger1","finger2","hands","head","legs","mainHand","neck","offHand","shoulder","trinket1","trinket2","waist","wrist"];
-            angular.forEach(slots, function(value, key) {
-                if (data.items[value] !== undefined) {
-                    $scope.items[value] = {
-                        id: data.items[value].id,
-                        name: data.items[value].name,
-                        quality: data.items[value].quality,
-                        itemLevel: data.items[value].itemLevel,
-                        stats: GetStats(data.items[value].stats),
-                        armor: data.items[value].armor
-                    };
-                }
-            });
-            
-            var lowestItemLevel = 1000;
-            var highestItemLevel = 0;
-            $scope.items.lowestItem;
-            $scope.items.highestItem;
-            angular.forEach($scope.items, function(slot) {
-                if (slot.itemLevel != 0) {
-                    if (slot.itemLevel < lowestItemLevel) {
-                        lowestItemLevel = slot.itemLevel;
-                        $scope.items.lowestItem = slot;
-                    }
-                    
-                    if (slot.itemLevel > highestItemLevel) {
-                        highestItemLevel = slot.itemLevel;
-                        $scope.items.highestItem = slot;
-                    }
-                }
-            });
-
-            $scope.pets = {
-                collectedCount: data.pets.numCollected,
-                uncollectedCount: data.pets.numNotCollected,
-                sortOrder: "name",
-                sortDesc: false,
-                pets: []
-            };
-
-            angular.forEach(data.pets.collected, function(pet) {
-                $scope.pets.pets.push({
-                    name: pet.name,
-                    level: pet.stats.level,
-                    canBattle: pet.canBattle ? "Yes" : "No",
-                    quality: pet.qualityId
-                });
-            });
-
-            $scope.mounts = {
-                collectedCount: data.mounts.numCollected,
-                uncollectedCount: data.mounts.numNotCollected,
-                sortOrder: "name",
-                sortDesc: false,
-                mounts: []
-            };
-
-            angular.forEach(data.mounts.collected, function(mount) {
-                $scope.mounts.mounts.push({ 
-                    name: mount.name,
-                    flying: mount.isFlying ? "Yes" : "No"
-                });
-            });
-
-            $scope.hunterPets = {
-                sortOrder: "name",
-                sortDesc: false,
-                hunterPets: []
-            };
-            angular.forEach(data.hunterPets, function(hpet) {
-                var role = "N/A";
-                if (hpet.spec !== undefined) {
-                    role = hpet.spec.role;
-                }
-
-                $scope.hunterPets.hunterPets.push({ 
-                    name: hpet.name,
-                    familyName: hpet.familyName,
-                    role: role
-                });
-            });
-
-            angular.forEach(data.professions.primary, function(profession) {
-                $scope.professions.push({
-                    name: profession.name,
-                    rank: profession.rank,
-                    maxRank: profession.max
-                });
-            });
-
-            angular.forEach(data.professions.secondary, function(profession) {
-                $scope.professions.push({
-                    name: profession.name,
-                    rank: profession.rank,
-                    maxRank: profession.max
-                });
-            });
-
-            var selectedTitle = "";
-            angular.forEach(data.titles, function(title) {
-                var fullTitle = title.name.replace("%s", $scope.toonName);
-                if (title.selected) {
-                    selectedTitle = fullTitle;
-                    $scope.toon.title = fullTitle;
-                } else {
-                    $scope.titles.push(fullTitle);
-                }
-            });
-
-            if (selectedTitle !== "") {
-                $scope.titles.unshift(selectedTitle);
+        var selectedTitle = "";
+        angular.forEach(data.titles, function(title) {
+            var fullTitle = title.name.replace("%s", $scope.toonName);
+            if (title.selected) {
+                selectedTitle = fullTitle;
+                $scope.toon.title = fullTitle;
+            } else {
+                $scope.titles.push(fullTitle);
             }
-            $scope.loading = false;
+        });
+
+        if (selectedTitle !== "") {
+            $scope.titles.unshift(selectedTitle);
+        }
+    }
+
+    function setPower(data) {
+        $scope.power.push({name: "Health", quantity: data.stats.health});
+        $scope.power.push({name: data.stats.powerType.capitalizeFirstLetter(), quantity: data.stats.power});
+        $scope.power.push({name: "Strength", quantity: data.stats.str});
+        $scope.power.push({name: "Agility", quantity: data.stats.agi});
+        $scope.power.push({name: "Intellect", quantity: data.stats.int});
+        $scope.power.push({name: "Stamina", quantity: data.stats.sta});
+        $scope.power.push({name: "Crit", quantity: data.stats.crit});
+        $scope.power.push({name: "Haste", quantity: data.stats.haste});
+        $scope.power.push({name: "Mastery", quantity: data.stats.mastery});
+        $scope.power.push({name: "Versatility", quantity: data.stats.versatility});
+        $scope.power.push({name: "Spell Crit", quantity: data.stats.spellCrit});
+        $scope.power.push({name: "Armor", quantity: data.stats.armor});
+        $scope.power.push({name: "Dodge", quantity: data.stats.dodge});
+        $scope.power.push({name: "Parry", quantity: data.stats.parry});
+        $scope.power.push({name: "Block", quantity: data.stats.block});
+        $scope.power.push({name: "Main Hand DPS", quantity: data.stats.mainHandDps});
+        $scope.power.push({name: "Off Hand DPS", quantity: data.stats.offHandDps});
+        $scope.power.push({name: "Ranged DPS", quantity: data.stats.rangedDps});
+    }
+
+    function setStats(data) {
+        angular.forEach(data.statistics.subCategories[0].subCategories[0].statistics, function(stat) {
+            var highest;
+            if (stat.highest) {
+                highest = stat.highest;
+            }
+
+            $scope.stats.consumables.push({
+                name: stat.name,
+                highest: highest,
+                quantity: stat.quantity
+            });
+        });
+
+        angular.forEach(data.statistics.subCategories[1].statistics, function(stat) {
+            $scope.stats.combat.push({
+                name: stat.name,
+                quantity: stat.quantity
+            });
+        });
+
+        $scope.stats.kills = {
+            quantity: data.statistics.subCategories[2].statistics[0].quantity
+        };
+
+        $scope.stats.kills.most = {
+            name: data.statistics.subCategories[2].subCategories[0].statistics[2].name,
+            highest: data.statistics.subCategories[2].subCategories[0].statistics[2].highest,
+            quantity: data.statistics.subCategories[2].subCategories[0].statistics[2].quantity
+        };
+        
+        $scope.stats.deaths = data.statistics.subCategories[3].statistics[0].quantity;
+        $scope.stats.questsCompleted = data.statistics.subCategories[4].statistics[0].quantity;
+        $scope.stats.dailiesCompleted = data.statistics.subCategories[4].statistics[2].quantity;
+
+        $scope.stats.travel.push({
+            name: data.statistics.subCategories[7].statistics[0].name,
+            quantity: data.statistics.subCategories[7].statistics[0].quantity
+        });
+        
+        $scope.stats.travel.push({
+            name: data.statistics.subCategories[7].statistics[4].name,
+            quantity: data.statistics.subCategories[7].statistics[4].quantity
+        });
+    }
+
+    function setItems(data) {
+        $scope.items.avgItemLvl = data.items.averageItemLevel;
+        $scope.items.avgItemLvlEquipped = data.items.averageItemLevelEquipped;
+
+        var slots = ["back","chest","feet","finger1","finger2","hands","head","legs","mainHand","neck","offHand","shoulder","trinket1","trinket2","waist","wrist"];
+        angular.forEach(slots, function(value, key) {
+            if (data.items[value] !== undefined) {
+                $scope.items[value] = {
+                    id: data.items[value].id,
+                    name: data.items[value].name,
+                    quality: data.items[value].quality,
+                    itemLevel: data.items[value].itemLevel,
+                    stats: GetStats(data.items[value].stats),
+                    armor: data.items[value].armor
+                };
+            }
+        });
+        
+        var lowestItemLevel = 1000;
+        var highestItemLevel = 0;
+        $scope.items.lowestItem;
+        $scope.items.highestItem;
+        angular.forEach($scope.items, function(slot) {
+            if (slot.itemLevel != 0) {
+                if (slot.itemLevel < lowestItemLevel) {
+                    lowestItemLevel = slot.itemLevel;
+                    $scope.items.lowestItem = slot;
+                }
+                
+                if (slot.itemLevel > highestItemLevel) {
+                    highestItemLevel = slot.itemLevel;
+                    $scope.items.highestItem = slot;
+                }
+            }
+        });
+    }
+
+    function setPets(data) {
+        $scope.pets = {
+            collectedCount: data.pets.numCollected,
+            uncollectedCount: data.pets.numNotCollected,
+            sortOrder: "name",
+            sortDesc: false,
+            pets: []
+        };
+
+        angular.forEach(data.pets.collected, function(pet) {
+            $scope.pets.pets.push({
+                name: pet.name,
+                level: pet.stats.level,
+                canBattle: pet.canBattle ? "Yes" : "No",
+                quality: pet.qualityId
+            });
+        });
+
+    }
+
+    function setMounts(data) {
+        $scope.mounts = {
+            collectedCount: data.mounts.numCollected,
+            uncollectedCount: data.mounts.numNotCollected,
+            sortOrder: "name",
+            sortDesc: false,
+            mounts: []
+        };
+
+        angular.forEach(data.mounts.collected, function(mount) {
+            $scope.mounts.mounts.push({ 
+                name: mount.name,
+                flying: mount.isFlying ? "Yes" : "No"
+            });
+        });
+    }
+
+    function setHunterPets(data) {
+        $scope.hunterPets = {
+            sortOrder: "name",
+            sortDesc: false,
+            hunterPets: []
+        };
+
+        angular.forEach(data.hunterPets, function(hpet) {
+            var role = "N/A";
+            if (hpet.spec !== undefined) {
+                role = hpet.spec.role;
+            }
+
+            $scope.hunterPets.hunterPets.push({ 
+                name: hpet.name,
+                familyName: hpet.familyName,
+                role: role
+            });
+        });
+    }
+
+    function setProfessions(data) {
+        angular.forEach(data.professions.primary, function(profession) {
+            $scope.professions.push({
+                name: profession.name,
+                rank: profession.rank,
+                maxRank: profession.max
+            });
+        });
+
+        angular.forEach(data.professions.secondary, function(profession) {
+            $scope.professions.push({
+                name: profession.name,
+                rank: profession.rank,
+                maxRank: profession.max
+            });
         });
     }
 
@@ -344,5 +375,4 @@ blizzApp.controller("BlizzCtrl", function($scope, $http, BlizzardSvc) {
         });
         return itemStats;
     }
-
-})
+}
